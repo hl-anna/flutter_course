@@ -4,8 +4,9 @@ class Answer extends StatelessWidget {
   // const ({ Key? key }) : super(key: ke// y);
   // QUESTION: Why do I need to use VoidCallback instead of Function here? (function seemed to work for the guy in the video)
   final VoidCallback selectHandler;
+  final String answerText;
 
-  Answer(this.selectHandler);
+  Answer(this.selectHandler, this.answerText);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class Answer extends StatelessWidget {
           backgroundColor: MaterialStateProperty.all(Colors.blueGrey.shade900),
           foregroundColor: MaterialStateProperty.all(Colors.white),
         ),
-        child: Text('Answer 1'),
+        child: Text(answerText),
         onPressed: selectHandler,
       ),
     );
