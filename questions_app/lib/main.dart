@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
-import './answer.dart';
+import './quiz.dart';
+import './result.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,45 +18,53 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var _questionIndex = 0;
-  final questions = const [
+  var _totalScore = 0;
+
+  void _resetQuiz() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
+  final _questions = const [
     {
-      'questionText': 'What\'s your favourite colour?',
+      'questionText': 'Which of the below colours do you prefer?',
       'answers': [
-        'Blue',
-        'Red',
-        'Pink',
-        'Yellow',
-        'Black',
-        'White',
-        'Purple',
-        'Green',
-        'Brown',
-        // 'Orange', <- How do I make
-        // 'Grey',
-        // 'Other'
+        {'text': 'Blue', 'score': 1},
+        {'text': 'Orange', 'score': 5},
+        {'text': 'Black', 'score': 3},
+        {'text': 'Red', 'score': 3},
+        {'text': 'Yellow', 'score': 2},
+        {'text': 'Brown', 'score': 6},
       ]
     },
     {
-      'questionText': 'What\'s your favourite animal?',
+      'questionText': 'Which of the below animals do you like the most?',
       'answers': [
-        'Dogs',
-        'Cats',
-        'I don\'t have a favourite, all animals are cute (except spiders). Spiders are scary, especially the big ones with hairy legs. I prefer friendly and fluffy animals that can\'t kill you.',
-        'Other'
+        {'text': 'Cats', 'score': 1},
+        {'text': 'Dogs', 'score': 1},
+        {'text': 'Spiders', 'score': 10},
+        {'text': 'Rabbits', 'score': 1},
       ]
     },
     {
       'questionText': 'How are you today?',
-      'answers': ['Great!', 'Fine', 'Meh', 'Don\'t even ask...']
+      'answers': [
+        {'text': 'Great!', 'score': 1},
+        {'text': 'Fine', 'score': 1},
+        {'text': 'Meh', 'score': 1},
+        {'text': 'Don\'t even ask...', 'score': 1},
+      ]
     },
   ];
 
-  void _answerQuestion() {
+  void _answerQuestion(int score) {
     setState(() {
-      //QUESTION: how do I actually get access to questions.length so i don't have to hardcode the if statement ?
-      if (_questionIndex < questions.length) {
+      _totalScore += score;
+      if (_questionIndex < _questions.length) {
         _questionIndex += 1;
-      } else {}
+      }
     });
     print(_questionIndex);
   }
@@ -65,24 +73,15 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Questionnaire'),
-        ),
-        body: _questionIndex < questions.length
-            ? Column(
-                children: [
-                  Question(
-                      (questions[_questionIndex]['questionText']) as String),
-                  ...(questions[_questionIndex]['answers'] as List<String>)
-                      .map((answer) {
-                    return Answer(_answerQuestion, answer);
-                  }).toList()
-                ],
-              )
-            : Center(
-                child: Text('Thanks for your answers!'),
-              ),
-      ),
+          appBar: AppBar(
+            title: const Text('Questionnaire'),
+          ),
+          body: _questionIndex < _questions.length
+              ? Quiz(
+                  selectHandler: _answerQuestion,
+                  questionMap: _questions,
+                  questionIndex: _questionIndex)
+              : Result(_totalScore, _resetQuiz)),
     );
   }
 }
