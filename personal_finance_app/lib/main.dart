@@ -1,7 +1,9 @@
-import 'package:finance_app/widgets/user_transactions.dart';
+import 'package:finance_app/widgets/transaction_list.dart';
 import 'package:flutter/material.dart';
 
-import './widgets/user_transactions.dart';
+import './widgets/new_transaction.dart';
+import './widgets/transaction_list.dart';
+import './models/transaction.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,19 +24,52 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _UserTransactions = [
+    Transaction(
+        id: 't1', title: 'Nike Shoes', amount: 89.99, date: DateTime.now()),
+    Transaction(
+        id: 't2', title: "Sainsbury's", amount: 23.72, date: DateTime.now())
+  ];
+
+  void _addNewTransaction(String txTitle, double txAmount) {
+    final newTx = Transaction(
+        id: DateTime.now().toString(),
+        title: txTitle,
+        amount: txAmount,
+        date: DateTime.now());
+    setState(() {
+      _UserTransactions.add(newTx);
+    });
+  }
+
   // late String titleInput;
-  // late String amountInput;
-  // final titleController = TextEditingController();
-  // final amountController = TextEditingController();
+  void _startAddNewTransaction(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (_) {
+        return NewTransaction(_addNewTransaction);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Personal Finance'),
+        actions: <Widget>[
+          IconButton(
+              onPressed: () => _startAddNewTransaction(context),
+              icon: Icon(Icons.add))
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -54,9 +89,14 @@ class MyHomePage extends StatelessWidget {
                   )),
               elevation: 5,
             ),
-            UserTransactions()
+            TransactionList(_UserTransactions)
           ],
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => _startAddNewTransaction(context),
       ),
     );
   }
