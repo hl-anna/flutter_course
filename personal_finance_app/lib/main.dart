@@ -17,8 +17,23 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter App',
       theme: ThemeData(
-        primarySwatch: Colors.purple, //blueGrey,
-      ),
+          primarySwatch: Colors.purple, //blueGrey,
+          accentColor: Colors.amber,
+          fontFamily: 'Quicksand',
+          textTheme: ThemeData.light().textTheme.copyWith(
+                headline6: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+          appBarTheme: AppBarTheme(
+            textTheme: ThemeData.light().textTheme.copyWith(
+                  headline6: const TextStyle(
+                      fontFamily: 'OpenSans',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+          )),
       home: MyHomePage(),
     );
   }
@@ -33,10 +48,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _UserTransactions = [
-    Transaction(
-        id: 't1', title: 'Nike Shoes', amount: 89.99, date: DateTime.now()),
-    Transaction(
-        id: 't2', title: "Sainsbury's", amount: 23.72, date: DateTime.now())
+    // Transaction(
+    //     id: 't1', title: 'Nike Shoes', amount: 89.99, date: DateTime.now()),
+    // Transaction(
+    //     id: 't2', title: "Sainsbury's", amount: 23.72, date: DateTime.now())
   ];
 
   void _addNewTransaction(String txTitle, double txAmount) {
