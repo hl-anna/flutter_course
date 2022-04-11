@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
+import './widgets/chart.dart';
 import './models/transaction.dart';
 
 void main() {
@@ -54,6 +55,16 @@ class _MyHomePageState extends State<MyHomePage> {
     //     id: 't2', title: "Sainsbury's", amount: 23.72, date: DateTime.now())
   ];
 
+  List<Transaction> get _recentTransactions {
+    return _UserTransactions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
+
   void _addNewTransaction(String txTitle, double txAmount) {
     final newTx = Transaction(
         id: DateTime.now().toString(),
@@ -91,19 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.center, we want 'start' allignment, which is the default
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Card(
-              child: Container(
-                  color: Colors.purple.shade100,
-                  height: 100,
-                  width: 100, //double.infinity would take up the full screen
-                  child: Center(
-                    child: const Text(
-                      'CHART',
-                      textAlign: TextAlign.center,
-                    ),
-                  )),
-              elevation: 5,
-            ),
+            Chart(_recentTransactions),
             TransactionList(_UserTransactions)
           ],
         ),
